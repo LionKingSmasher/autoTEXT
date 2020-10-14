@@ -4,8 +4,113 @@ $KEY_RELEASE = "KeyStrRelease ";
 $DELAY = "Delay ";
 $CTRL = "Control_L"; #좌측 컨트롤
 $AL = "Alt_L"; #좌측 알트
-$SPACE = "space";
-$ENTER = "Return";
+$SPACE = "space"; #스페이스바
+$ENTER = "Return"; #엔터
+$SHIFT = "Shift_L"; #좌측 쉬프트
+$COMMA = "comma"; #콤마
+$PERIOD = "period"; #마침표
+$BLEFT = "bracketleft"; #대괄호(좌)
+$BRIGHT = "bracketright"; #대관호(우)
+$SEMICOLON = "semicolon";
+$APPA = "apostrophe";
+$SLASH = "slash";
+$BSLASH = "backslash";
+$BACKSPACE = "BackSpace";
+$past = '';
+$sec_past = '';
+function check_shift($input, $past_i, $sec_past_i){
+    global $past;
+    global $KEY_PRESS;
+    global $KEY_RELEASE;
+    global $SHIFT;
+    global $COMMA;
+    global $PERIOD;
+    global $BLEFT;
+    global $BRIGHT;
+    global $SEMICOLON;
+    global $APPA;
+    global $SLASH;
+    global $BSLASH;
+    global $BACKSPACE;
+    global $ENTER;
+    if($past_i == "\n" and $sec_past_i == ";"){
+        print $KEY_PRESS.$BACKSPACE."\n";
+        print $KEY_RELEASE.$BACKSPACE."\n";
+    }
+    switch($input){
+        case '!':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS."1\n";
+            print $KEY_RELEASE."1\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '#':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS."3\n";
+            print $KEY_RELEASE."3\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '(':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS."9\n";
+            print $KEY_RELEASE."9\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case ')' :
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS."0\n";
+            print $KEY_RELEASE."0\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '>':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS.$PERIOD."\n";
+            print $KEY_RELEASE.$PERIOD."\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '<':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS.$COMMA."\n";
+            print $KEY_RELEASE.$COMMA."\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '{':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS.$BLEFT."\n";
+            print $KEY_RELEASE.$BLEFT."\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '}':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS.$BRIGHT."\n";
+            print $KEY_RELEASE.$BRIGHT."\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case '"':
+            print $KEY_PRESS.$SHIFT."\n";
+            print $KEY_PRESS.$APPA."\n";
+            print $KEY_RELEASE.$APPA."\n";
+            print $KEY_RELEASE.$SHIFT."\n";
+            break;
+        case ',':
+            print $KEY_PRESS.$COMMA."\n";
+            print $KEY_RELEASE.$COMMA."\n";
+            break;
+        case '.':
+            print $KEY_PRESS.$PERIOD."\n";
+            print $KEY_RELEASE.$PERIOD."\n";
+            break;
+        case ';':
+            print $KEY_PRESS.$SEMICOLON."\n";
+            print $KEY_RELEASE.$SEMICOLON."\n";
+            break;
+        default:
+            if($input == '\0') break;
+            print $KEY_PRESS.$input."\n";
+            print $KEY_RELEASE.$input."\n";
+            break;
+    }
+}
 function input_start($file, $key, $chk_shell)
 {
     global $DELAY;
@@ -15,7 +120,8 @@ function input_start($file, $key, $chk_shell)
     global $AL;
     global $SPACE;
     global $ENTER;
-
+    global $past;
+    global $sec_past;
     if($chk_shell) {
         print $KEY_PRESS.$CTRL."\n";
         print $KEY_PRESS.$AL."\n";
@@ -42,6 +148,26 @@ function input_start($file, $key, $chk_shell)
     print $KEY_PRESS.$ENTER."\n";
     print $KEY_RELEASE.$ENTER."\n";
     ####################################################
+    print $KEY_PRESS.$ENTER."\n";
+    print $KEY_RELEASE.$ENTER."\n";
+#   print $DELAY."2\n";
+    while(!feof($file)){
+        $in = fgetc($file);
+        if($in == "\0") break;
+        if($in == " ") {
+            print $KEY_PRESS.$SPACE."\n";
+            print $KEY_RELEASE.$SPACE."\n";
+        }
+        elseif($in == "\n"){
+            print $KEY_PRESS.$ENTER."\n";
+            print $KEY_RELEASE.$ENTER."\n";
+        }
+        else {
+            check_shift($in, $past, $sec_past);
+        }
+        $sec_past = $past;
+        $past = $in;
+    }
 }
 
 $new_shell = false; #쉘 실행여부
