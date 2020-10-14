@@ -18,6 +18,7 @@ $BSLASH = "backslash";
 $BACKSPACE = "BackSpace";
 $past = '';
 $sec_past = '';
+$SPACE_CNT = 0;
 function check_shift($input, $past_i, $sec_past_i){
     global $past;
     global $KEY_PRESS;
@@ -122,6 +123,8 @@ function input_start($file, $key, $chk_shell)
     global $ENTER;
     global $past;
     global $sec_past;
+    global $SPACE_CNT;
+    $CUR_CNT = 0;
     if($chk_shell) {
         print $KEY_PRESS.$CTRL."\n";
         print $KEY_PRESS.$AL."\n";

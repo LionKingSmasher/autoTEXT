@@ -1,9 +1,3 @@
-MotionNotify 1523 552
-KeyStrPress space
-KeyStrRelease space
-KeyStrPress Return
-KeyStrRelease Return
-KeyStrPress space
-KeyStrRelease space
-KeyStrPress Return
-KeyStrRelease Return
+MotionNotify 271 674
+KeyStrPress BackSpace
+KeyStrRelease BackSpace
