@@ -18,7 +18,9 @@ $BSLASH = "backslash";
 $BACKSPACE = "BackSpace";
 $past = '';
 $sec_past = '';
-$SPACE_CNT = 0;
+$SPACE_CNT = 0; #스페이스바 개수(탭)
+$CUR_CNT = 0;
+$SAVE_SPACE_CNT = 0;
 function check_shift($input, $past_i, $sec_past_i){
     global $past;
     global $KEY_PRESS;
@@ -34,10 +36,30 @@ function check_shift($input, $past_i, $sec_past_i){
     global $BSLASH;
     global $BACKSPACE;
     global $ENTER;
-    if($past_i == "\n" and $sec_past_i == ";"){
-        print $KEY_PRESS.$BACKSPACE."\n";
-        print $KEY_RELEASE.$BACKSPACE."\n";
+    global $CUR_CNT;
+    global $SPACE;
+    global $SPACE_CNT;
+    global $SAVE_SPACE_CNT;
+
+    $SPACE_CNT = (int)($SPACE_CNT/4)*4;
+    $SAVE_SPACE_CNT = $SPACE_CNT; 
+
+#   print "기록)".$SPACE_CNT."\n";
+
+    if($SPACE_CNT == $CUR_CNT);
+    else if($CUR_CNT % 4 == 0 and ($CUR_CNT / 4) > 1){
+        for($i = 0; $i < ($CUR_CNT / 4); $i++){
+            print $KEY_PRESS.$BACKSPACE."\n";
+            print $KEY_RELEASE.$BACKSPACE."\n";
+        }
+    }else{
+        for($i = 0; $i < $CUR_CNT; $i++){
+            print $KEY_PRESS.$SPACE."\n";
+            print $KEY_RELEASE.$SPACE."\n";
+        }
     }
+    $CUR_CNT = 0;
+    $SPACE_CNT = 0;
     switch($input){
         case '!':
             print $KEY_PRESS.$SHIFT."\n";
@@ -124,7 +146,7 @@ function input_start($file, $key, $chk_shell)
     global $past;
     global $sec_past;
     global $SPACE_CNT;
-    $CUR_CNT = 0;
+    global $CUR_CNT;
     if($chk_shell) {
         print $KEY_PRESS.$CTRL."\n";
         print $KEY_PRESS.$AL."\n";
@@ -158,8 +180,10 @@ function input_start($file, $key, $chk_shell)
         $in = fgetc($file);
         if($in == "\0") break;
         if($in == " ") {
-            print $KEY_PRESS.$SPACE."\n";
-            print $KEY_RELEASE.$SPACE."\n";
+            $CUR_CNT++;
+            $SPACE_CNT++;
+#           print $KEY_PRESS.$SPACE."\n";
+#           print $KEY_RELEASE.$SPACE."\n";
         }
         elseif($in == "\n"){
             print $KEY_PRESS.$ENTER."\n";
@@ -177,6 +201,5 @@ $new_shell = false; #쉘 실행여부
 if($argv[1] == "-y") $new_shell = true; //실행을 바라면 시작
 $input_file = fopen($argv[2], "r") or die("파일을 찾을 수 없습니다.");
 $get_file_KEY = array();
-$cnt = 0;
 input_start($input_file, $get_file_KEY, $new_shell);
 ?>
